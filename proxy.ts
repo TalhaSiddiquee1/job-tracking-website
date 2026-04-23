@@ -2,7 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "./lib/auth/auth";
 
 export default async function proxy(request: NextRequest) {
-  const session = await getSession();
+  let session = null;
+
+  try {
+    session = await getSession();
+  } catch (error) {
+    console.error("Session check failed in proxy", error);
+  }
 
   const isSignInPage = request.nextUrl.pathname.startsWith("/sign-in");
   const isSignUpPage = request.nextUrl.pathname.startsWith("/sign-up");
